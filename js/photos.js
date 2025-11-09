@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement } from './util.js';
+import { getRandomInteger, getRandomArrayElement } from './utils.js';
 import { DESCRIPTIONS, MESSAGES, NAMES, MAX_COMMENTS } from './consts.js';
 
 const createComment = () => ({
@@ -10,7 +10,7 @@ const createComment = () => ({
 
 const createPhoto = (index) => ({
   id: index + 1,
-  url: `photos/${index + 1}.jpg`,
+  url: `./photos/${index + 1}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger(15, 200),
   comments: Array.from({length: getRandomInteger(0, MAX_COMMENTS)}, createComment)
