@@ -1,4 +1,5 @@
 import { generatePhotos } from './data.js';
+import { openFullscreen } from './fullscreen.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
@@ -10,6 +11,11 @@ const createThumbnail = (photo) => {
   thumbnail.querySelector('.picture__img').alt = photo.description;   
   thumbnail.querySelector('.picture__likes').textContent = photo.likes;        
   thumbnail.querySelector('.picture__comments').textContent = photo.comments.length; 
+  
+  // Добавляем обработчик клика для открытия полноразмерного просмотра
+  thumbnail.addEventListener('click', () => {
+    openFullscreen(photo);
+  });
   
   return thumbnail;
 };
