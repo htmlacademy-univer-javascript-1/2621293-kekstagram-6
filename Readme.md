@@ -1,7 +1,11 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Дарья Артемьева](https://up.htmlacademy.ru/univer-js1/6/user/2621293).
+<<<<<<< HEAD
+* Наставник: [Владимир Вавщик](https://htmlacademy.ru/profile/id1610171)
+=======
 * Наставник: [Владимир Вавщик](https://htmlacademy.ru/profile/id1610171).
+>>>>>>> 47f58d98efa7aa808df718367972a747b9ac18a4
 
 ---
 
