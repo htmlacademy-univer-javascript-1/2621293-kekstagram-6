@@ -12,7 +12,6 @@ const createThumbnail = (photo) => {
   thumbnail.querySelector('.picture__likes').textContent = photo.likes;        
   thumbnail.querySelector('.picture__comments').textContent = photo.comments.length; 
   
-  // Добавляем обработчик клика для открытия полноразмерного просмотра
   thumbnail.addEventListener('click', () => {
     openFullscreen(photo);
   });
