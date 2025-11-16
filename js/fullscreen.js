@@ -6,7 +6,6 @@ const socialComments = bigPictureElement.querySelector('.social__comments');
 const socialCommentCount = bigPictureElement.querySelector('.social__comment-count');
 const commentsLoader = bigPictureElement.querySelector('.comments-loader');
 
-// Скрываем элементы как требует задание
 socialCommentCount.classList.add('hidden');
 commentsLoader.classList.add('hidden');
 
@@ -41,17 +40,14 @@ const renderComments = (comments) => {
 };
 
 function openFullscreen(photo) {
-  // Заполняем данные фотографии
   bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
   bigPictureElement.querySelector('.big-picture__img img').alt = photo.description;
   bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
   bigPictureElement.querySelector('.comments-count').textContent = photo.comments.length;
   bigPictureElement.querySelector('.social__caption').textContent = photo.description;
-  
-  // Отрисовываем комментарии
+ 
   renderComments(photo.comments);
-  
-  // Показываем окно
+ 
   bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   
@@ -64,7 +60,6 @@ function closeFullscreen() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-// Закрытие по крестику
 closeButton.addEventListener('click', () => {
   closeFullscreen();
 });
