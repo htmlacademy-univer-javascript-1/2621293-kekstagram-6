@@ -43,6 +43,7 @@ const renderThumbnails = () => {
   
   picturesContainerElement.appendChild(fragment);
   picturesContainerElement.addEventListener('click', onPicturesContainerClick);
+
 };
 
 renderThumbnails();
