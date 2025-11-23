@@ -1,34 +1,48 @@
 import { generatePhotos } from './data.js';
 import { openFullscreen } from './fullscreen.js';
 
-const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const picturesContainer = document.querySelector('.pictures');
+const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
+
+let photos = [];
 
 const createThumbnail = (photo) => {
-  const thumbnail = pictureTemplate.cloneNode(true);
+  const thumbnailElement = pictureTemplateElement.cloneNode(true);
   
-  thumbnail.querySelector('.picture__img').src = photo.url;          
-  thumbnail.querySelector('.picture__img').alt = photo.description;   
-  thumbnail.querySelector('.picture__likes').textContent = photo.likes;        
-  thumbnail.querySelector('.picture__comments').textContent = photo.comments.length; 
+  thumbnailElement.querySelector('.picture__img').src = photo.url;          
+  thumbnailElement.querySelector('.picture__img').alt = photo.description;   
+  thumbnailElement.querySelector('.picture__likes').textContent = photo.likes;        
+  thumbnailElement.querySelector('.picture__comments').textContent = photo.comments.length; 
   
-  thumbnail.addEventListener('click', () => {
-    openFullscreen(photo);
-  });
+  thumbnailElement.dataset.photoId = photo.id;
   
-  return thumbnail;
+  return thumbnailElement;
+};
+
+const onPicturesContainerClick = (evt) => {
+  const thumbnailElement = evt.target.closest('.picture');
+  
+  if (thumbnailElement) {
+    const photoId = parseInt(thumbnailElement.dataset.photoId, 10);
+    const photo = photos.find((item) => item.id === photoId);
+    
+    if (photo) {
+      openFullscreen(photo);
+    }
+  }
 };
 
 const renderThumbnails = () => {
-  const photos = generatePhotos();
+  photos = generatePhotos();
   const fragment = document.createDocumentFragment();
   
   photos.forEach((photo) => {
-    const thumbnail = createThumbnail(photo);
-    fragment.appendChild(thumbnail);
+    const thumbnailElement = createThumbnail(photo);
+    fragment.appendChild(thumbnailElement);
   });
   
-  picturesContainer.appendChild(fragment);
+  picturesContainerElement.appendChild(fragment);
+  picturesContainerElement.addEventListener('click', onPicturesContainerClick);
 };
 
 renderThumbnails();
