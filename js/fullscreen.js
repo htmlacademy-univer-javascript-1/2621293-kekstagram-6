@@ -1,13 +1,13 @@
 import { isEscapeKey } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
-const closeButton = bigPictureElement.querySelector('.big-picture__cancel');
-const socialComments = bigPictureElement.querySelector('.social__comments');
-const socialCommentCount = bigPictureElement.querySelector('.social__comment-count');
-const commentsLoader = bigPictureElement.querySelector('.comments-loader');
+const closeButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
+const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
+const socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
 
-socialCommentCount.classList.add('hidden');
-commentsLoader.classList.add('hidden');
+socialCommentCountElement.classList.add('hidden');
+commentsLoaderElement.classList.add('hidden');
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -29,14 +29,14 @@ const createComment = (comment) => {
 };
 
 const renderComments = (comments) => {
-  socialComments.innerHTML = '';
+  socialCommentsElement.innerHTML = '';
   const commentsFragment = document.createDocumentFragment();
   
   comments.forEach((comment) => {
     commentsFragment.appendChild(createComment(comment));
   });
   
-  socialComments.appendChild(commentsFragment);
+  socialCommentsElement.appendChild(commentsFragment);
 };
 
 function openFullscreen(photo) {
@@ -60,7 +60,7 @@ function closeFullscreen() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-closeButton.addEventListener('click', () => {
+closeButtonElement.addEventListener('click', () => {
   closeFullscreen();
 });
 
