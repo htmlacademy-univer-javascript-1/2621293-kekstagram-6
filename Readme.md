@@ -7,7 +7,6 @@
 * Наставник: [Владимир Вавщик](https://htmlacademy.ru/profile/id1610171).
 >>>>>>> 47f58d98efa7aa808df718367972a747b9ac18a4
 
----
 
 _Не удаляйте и не изменяйте самовольно файлы и папки:_
 _`.editorconfig`, `.eslintrc`, `.gitattributes`, `.gitignore`, `package-lock.json`, `package.json`., `.github`_
