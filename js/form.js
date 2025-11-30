@@ -1,4 +1,3 @@
-/* global Pristine:readonly */
 import { isEscapeKey } from './utils.js';
 
 const MAX_HASHTAG_COUNT = 5;
@@ -61,7 +60,6 @@ const onCancelButtonClick = () => hideModal();
 
 const onFileInputChange = () => showModal();
 
-// Добавляем валидаторы
 pristine.addValidator(
   hashtagField,
   hasValidCount,
@@ -86,11 +84,9 @@ pristine.addValidator(
   true
 );
 
-// Добавляем обработчики
 fileInput.addEventListener('change', onFileInputChange);
 cancelButton.addEventListener('click', onCancelButtonClick);
 
-// Обработчик отправки формы
 form.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
   
@@ -99,10 +95,8 @@ form.addEventListener('submit', (evt) => {
   }
 });
 
-// Инициализация формы
 const initForm = () => {
-  console.log('✅ Форма инициализирована');
+  console.log('Форма инициализирована');
 };
 
-// Экспортируем функцию
 export { initForm };
