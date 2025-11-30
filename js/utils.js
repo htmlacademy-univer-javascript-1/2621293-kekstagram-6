@@ -9,4 +9,13 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export { getRandomInteger, getRandomArrayElement, isEscapeKey };
+// Добавляем только эту функцию из кода знакомой
+const createIdGenerator = () => {
+  let lastGeneratedId = 0;
+  return () => {
+    lastGeneratedId += 1;
+    return lastGeneratedId;
+  };
+};
+
+export { getRandomInteger, getRandomArrayElement, isEscapeKey, createIdGenerator };
