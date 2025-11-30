@@ -1,4 +1,3 @@
-/* global Pristine:readonly */
 import { isEscapeKey } from './utils.js';
 
 const MAX_HASHTAG_COUNT = 5;
