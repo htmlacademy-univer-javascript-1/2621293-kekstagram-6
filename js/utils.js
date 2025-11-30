@@ -9,7 +9,6 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-// Добавляем только эту функцию из кода знакомой
 const createIdGenerator = () => {
   let lastGeneratedId = 0;
   return () => {
