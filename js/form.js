@@ -22,15 +22,22 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error-text'
 });
 
+import { initScale, resetScale } from './size.js';
+import { initEffects, resetEffects } from './effects.js';
+
 const showModal = () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
+  initScale();
+  initEffects();
 };
 
 const hideModal = () => {
   form.reset();
   pristine.reset();
+  resetScale();
+  resetEffects();
   overlay.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
