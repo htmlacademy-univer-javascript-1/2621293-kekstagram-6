@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { openFullscreen } from './fullscreen.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
