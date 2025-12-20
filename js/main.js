@@ -4,9 +4,7 @@ import { showSuccessMessage, showErrorMessage } from './messages.js';
 import { initForm, hideModal } from './form.js';
 import { setOnFormSubmit } from './form-submit.js';
 
-const init = async () => {
-  try {
-    const photos = await getData();
+initForm();
 
 const loadPhotos = async () => {
   try {
