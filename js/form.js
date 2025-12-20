@@ -18,6 +18,7 @@ const cancelButtonElement = formElement.querySelector('.img-upload__cancel');
 const fileInputElement = formElement.querySelector('.img-upload__input');
 const hashtagFieldElement = formElement.querySelector('.text__hashtags');
 const descriptionFieldElement = formElement.querySelector('.text__description');
+const submitButton = formElement.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(formElement, {
   classTo: 'img-upload__field-wrapper',
@@ -25,19 +26,14 @@ const pristine = new Pristine(formElement, {
   errorTextClass: 'img-upload__error-text',
 });
 
-const normalizeTags = (value) =>
-  value.trim().split(' ').filter(Boolean);
+const normalizeTags = (value) => value.trim().split(' ').filter(Boolean);
 
 const isTextFieldFocused = () =>
   document.activeElement === hashtagFieldElement ||
   document.activeElement === descriptionFieldElement;
 
-const hasValidCount = (value) =>
-  normalizeTags(value).length <= MAX_HASHTAG_COUNT;
-
-const hasValidTags = (value) =>
-  normalizeTags(value).every((tag) => VALID_SYMBOLS.test(tag));
-
+const hasValidCount = (value) => normalizeTags(value).length <= MAX_HASHTAG_COUNT;
+const hasValidTags = (value) => normalizeTags(value).every((tag) => VALID_SYMBOLS.test(tag));
 const hasUniqueTags = (value) => {
   const tags = normalizeTags(value).map((tag) => tag.toLowerCase());
   return tags.length === new Set(tags).size;
@@ -77,4 +73,4 @@ const initForm = () => {
   cancelButtonElement.addEventListener('click', hideModal);
 };
 
-export { initForm, hideModal };
+export { initForm, hideModal, pristine, submitButton, formElement };

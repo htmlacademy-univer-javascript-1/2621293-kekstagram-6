@@ -3,19 +3,23 @@ import { renderThumbnails } from './thumbnails.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
 import { initForm, hideModal } from './form.js';
 import { setOnFormSubmit } from './form-submit.js';
+import { initFilters, getFilteredPictures } from './filters.js';
+import { showAlert } from './utils.js';
 
-initForm();
-
-const loadPhotos = async () => {
+const init = async () => {
   try {
     const photos = await getData();
-    renderThumbnails(photos);
+
+    initFilters(photos, renderThumbnails);
+
+    renderThumbnails(getFilteredPictures());
   } catch (err) {
-    alert(err.message);
+    showAlert(err.message);
   }
 };
 
-loadPhotos();
+init();
+initForm();
 
 setOnFormSubmit(async (formData) => {
   try {
