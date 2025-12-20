@@ -1,35 +1,34 @@
-import { openFullscreen } from './fullscreen.js';
-
-const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
+const pictureTemplate = document
+  .querySelector('#picture')
+  .content
+  .querySelector('.picture');
 
-const renderThumbnails = (photos) => {
+const clearThumbnails = () => {
+  const pictures = picturesContainer.querySelectorAll('.picture');
+  pictures.forEach((picture) => picture.remove());
+};
+
+const renderThumbnails = (pictures) => {
+  clearThumbnails();
+
   const fragment = document.createDocumentFragment();
 
-  photos.forEach((photo) => {
-    const thumbnail = pictureTemplate.cloneNode(true);
+  pictures.forEach(({ url, likes, comments, description, id }) => {
+    const pictureElement = pictureTemplate.cloneNode(true);
 
-    thumbnail.querySelector('.picture__img').src = photo.url;
-    thumbnail.querySelector('.picture__img').alt = photo.description;
-    thumbnail.querySelector('.picture__likes').textContent = photo.likes;
-    thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
+    const imageElement = pictureElement.querySelector('.picture__img');
+    imageElement.src = url;
+    imageElement.alt = description;
 
-    thumbnail.dataset.photoId = photo.id;
+    pictureElement.querySelector('.picture__likes').textContent = likes;
+    pictureElement.querySelector('.picture__comments').textContent = comments.length;
+    pictureElement.dataset.pictureId = id;
 
-    fragment.appendChild(thumbnail);
+    fragment.append(pictureElement);
   });
 
-  picturesContainer.appendChild(fragment);
-
-  picturesContainer.addEventListener('click', (evt) => {
-    const thumbnail = evt.target.closest('.picture');
-    if (!thumbnail) {
-      return;
-    }
-
-    const photo = photos.find((item) => item.id === Number(thumbnail.dataset.photoId));
-    openFullscreen(photo);
-  });
+  picturesContainer.append(fragment);
 };
 
 export { renderThumbnails };
