@@ -1,50 +1,35 @@
-import { generatePhotos } from './data.js';
 import { openFullscreen } from './fullscreen.js';
 
-const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
-const picturesContainerElement = document.querySelector('.pictures');
+const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+const picturesContainer = document.querySelector('.pictures');
 
-let photos = [];
-
-const createThumbnail = (photo) => {
-  const thumbnailElement = pictureTemplateElement.cloneNode(true);
-  
-  thumbnailElement.querySelector('.picture__img').src = photo.url;          
-  thumbnailElement.querySelector('.picture__img').alt = photo.description;   
-  thumbnailElement.querySelector('.picture__likes').textContent = photo.likes;        
-  thumbnailElement.querySelector('.picture__comments').textContent = photo.comments.length; 
-  
-  thumbnailElement.dataset.photoId = photo.id;
-  
-  return thumbnailElement;
-};
-
-const onPicturesContainerClick = (evt) => {
-  const thumbnailElement = evt.target.closest('.picture');
-  
-  if (thumbnailElement) {
-    const photoId = parseInt(thumbnailElement.dataset.photoId, 10);
-    const photo = photos.find((item) => item.id === photoId);
-    
-    if (photo) {
-      openFullscreen(photo);
-    }
-  }
-};
-
-const renderThumbnails = () => {
-  photos = generatePhotos();
+const renderThumbnails = (photos) => {
   const fragment = document.createDocumentFragment();
-  
-  photos.forEach((photo) => {
-    const thumbnailElement = createThumbnail(photo);
-    fragment.appendChild(thumbnailElement);
-  });
-  
-  picturesContainerElement.appendChild(fragment);
-  picturesContainerElement.addEventListener('click', onPicturesContainerClick);
-};
 
-renderThumbnails();
+  photos.forEach((photo) => {
+    const thumbnail = pictureTemplate.cloneNode(true);
+
+    thumbnail.querySelector('.picture__img').src = photo.url;
+    thumbnail.querySelector('.picture__img').alt = photo.description;
+    thumbnail.querySelector('.picture__likes').textContent = photo.likes;
+    thumbnail.querySelector('.picture__comments').textContent = photo.comments.length;
+
+    thumbnail.dataset.photoId = photo.id;
+
+    fragment.appendChild(thumbnail);
+  });
+
+  picturesContainer.appendChild(fragment);
+
+  picturesContainer.addEventListener('click', (evt) => {
+    const thumbnail = evt.target.closest('.picture');
+    if (!thumbnail) {
+      return;
+    }
+
+    const photo = photos.find((item) => item.id === Number(thumbnail.dataset.photoId));
+    openFullscreen(photo);
+  });
+};
 
 export { renderThumbnails };
