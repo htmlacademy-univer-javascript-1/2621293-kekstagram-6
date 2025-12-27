@@ -1,16 +1,14 @@
-import { formElement, pristine, submitButton } from './form.js';
+const formElement = document.querySelector('.img-upload__form');
 
 const setOnFormSubmit = (callback) => {
-  formElement.addEventListener('submit', async (evt) => {
+  if (!callback) {
+    return;
+  }
+
+  formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    if (pristine.validate()) {
-      submitButton.disabled = true;
-      try {
-        await callback(new FormData(formElement));
-      } finally {
-        submitButton.disabled = false;
-      }
-    }
+    const formData = new FormData(formElement);
+    callback(formData);
   });
 };
 
