@@ -17,7 +17,9 @@ const init = async () => {
     const picturesContainer = document.querySelector('.pictures');
     picturesContainer.addEventListener('click', (evt) => {
       const pictureElement = evt.target.closest('.picture');
-      if (!pictureElement) return;
+      if (!pictureElement) {
+        return;
+      }
 
       const pictureId = Number(pictureElement.dataset.pictureId);
       const photoData = getFilteredPictures().find((p) => p.id === pictureId);
@@ -39,7 +41,7 @@ setOnFormSubmit(async (formData) => {
     await sendData(formData);
     hideModal();
     showSuccessMessage();
-  } catch (err) { 
+  } catch (err) {
     showErrorMessage();
   }
 });
