@@ -9,9 +9,7 @@ import { showAlert } from './utils.js';
 const init = async () => {
   try {
     const photos = await getData();
-
     initFilters(photos, renderThumbnails);
-
     renderThumbnails(getFilteredPictures());
   } catch (err) {
     showAlert(err.message);

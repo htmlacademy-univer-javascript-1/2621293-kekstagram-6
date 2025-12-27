@@ -44,11 +44,11 @@ const showAlert = (message) => {
   }, 5000);
 };
 
-export { 
-  getRandomInteger, 
-  getRandomArrayElement, 
-  isEscapeKey, 
-  createIdGenerator, 
-  debounce, 
-  showAlert 
+export {
+  getRandomInteger,
+  getRandomArrayElement,
+  isEscapeKey,
+  createIdGenerator,
+  debounce,
+  showAlert
 };

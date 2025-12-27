@@ -47,10 +47,23 @@ const hasUniqueTags = (value) => {
   return tags.length === new Set(tags).size;
 };
 
+const hideModal = () => {
+  formElement.reset();
+  pristine.reset();
+  resetScale();
+  resetEffects();
+
+  previewImage.src = 'img/upload-default-image.jpg';
+
+  overlayElement.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !isTextFieldFocused()) {
     evt.preventDefault();
-    hideModal();
+    hideModal(); 
   }
 };
 
@@ -82,19 +95,6 @@ const showModal = () => {
   document.addEventListener('keydown', onDocumentKeydown);
   initScale();
   initEffects();
-};
-
-const hideModal = () => {
-  formElement.reset();
-  pristine.reset();
-  resetScale();
-  resetEffects();
-
-  previewImage.src = 'img/upload-default-image.jpg';
-
-  overlayElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const initForm = () => {

@@ -11,6 +11,8 @@ const setOnFormSubmit = (callback) => {
 
     try {
       await callback(formData);
+      hideModal();
+      showSuccessMessage();
     } catch {
       showErrorMessage();
     }

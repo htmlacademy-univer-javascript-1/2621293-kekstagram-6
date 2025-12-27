@@ -65,7 +65,7 @@ const createSlider = () => {
   sliderElement.noUiSlider.on('update', () => {
     const sliderValue = sliderElement.noUiSlider.get();
     effectLevelInput.value = sliderValue;
-    
+
     if (currentEffect !== 'none') {
       const effect = EFFECTS[currentEffect];
       imagePreview.style.filter = `${effect.filter}(${sliderValue}${effect.unit})`;
@@ -97,7 +97,7 @@ const onEffectsChange = (evt) => {
 const initEffects = () => {
   sliderContainer.classList.add('hidden');
   effectsContainer.addEventListener('change', onEffectsChange);
-  
+
   const originalEffect = document.querySelector('#effect-none');
   if (originalEffect) {
     originalEffect.checked = true;
@@ -108,7 +108,7 @@ const resetEffects = () => {
   currentEffect = 'none';
   imagePreview.style.filter = 'none';
   sliderContainer.classList.add('hidden');
-  
+
   if (sliderElement.noUiSlider) {
     sliderElement.noUiSlider.destroy();
   }
