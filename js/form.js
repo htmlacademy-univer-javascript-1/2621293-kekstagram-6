@@ -42,20 +42,15 @@ const hasUniqueTags = (value) => {
   return tags.length === new Set(tags).size;
 };
 
-const loadImage = () => {
-  const file = fileInputElement.files[0];
-  if (!file) return;
-
-  const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
-  if (!matches) return;
-
-  const imageURL = URL.createObjectURL(file);
-  previewImage.src = imageURL;
-
-  effectsPreviews.forEach((preview) => {
-    preview.style.backgroundImage = `url(${imageURL})`;
-  });
+const hideModal = () => {
+  formElement.reset();
+  pristine.reset();
+  resetScale();
+  resetEffects();
+  previewImage.src = 'img/upload-default-image.jpg';
+  overlayElement.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const onDocumentKeydown = (evt) => {
@@ -73,15 +68,24 @@ const showModal = () => {
   initEffects();
 };
 
-const hideModal = () => {
-  formElement.reset();
-  pristine.reset();
-  resetScale();
-  resetEffects();
-  previewImage.src = 'img/upload-default-image.jpg';
-  overlayElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
+const loadImage = () => {
+  const file = fileInputElement.files[0];
+  if (!file) {
+    return;
+  }
+
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+  if (!matches) {
+    return;
+  }
+
+  const imageURL = URL.createObjectURL(file);
+  previewImage.src = imageURL;
+
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = `url(${imageURL})`;
+  });
 };
 
 const initForm = () => {

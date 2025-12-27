@@ -11,13 +11,9 @@ const init = async () => {
   try {
     const photos = await getData();
 
-    // Инициализация фильтров после загрузки данных
     initFilters(photos, renderThumbnails);
-
-    // Первый рендер — по умолчанию
     renderThumbnails(getFilteredPictures());
 
-    // Обработчик клика на миниатюру
     const picturesContainer = document.querySelector('.pictures');
     picturesContainer.addEventListener('click', (evt) => {
       const pictureElement = evt.target.closest('.picture');
@@ -35,11 +31,9 @@ const init = async () => {
   }
 };
 
-// Инициализация формы загрузки
 initForm();
 init();
 
-// Обработчик отправки формы
 setOnFormSubmit(async (formData) => {
   try {
     await sendData(formData);
