@@ -1,21 +1,12 @@
-import { hideModal } from './form.js';
-import { sendData } from './api.js';
-import { showSuccessMessage, showErrorMessage } from './messages.js';
-
-const formElement = document.querySelector('.img-upload__form');
+import { formElement } from './form.js';
 
 const setOnFormSubmit = (callback) => {
-  formElement.addEventListener('submit', async (evt) => {
+  if (!formElement) return;
+
+  formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(formElement);
-
-    try {
-      await callback(formData);
-      hideModal();
-      showSuccessMessage();
-    } catch {
-      showErrorMessage();
-    }
+    callback(formData);
   });
 };
 

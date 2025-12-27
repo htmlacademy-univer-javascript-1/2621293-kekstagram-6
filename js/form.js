@@ -47,41 +47,22 @@ const hasUniqueTags = (value) => {
   return tags.length === new Set(tags).size;
 };
 
-const hideModal = () => {
-  formElement.reset();
-  pristine.reset();
-  resetScale();
-  resetEffects();
-
-  previewImage.src = 'img/upload-default-image.jpg';
-
-  overlayElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-};
-
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !isTextFieldFocused()) {
     evt.preventDefault();
-    hideModal(); 
+    hideModal();
   }
 };
 
 const loadImage = () => {
   const file = fileInputElement.files[0];
-  if (!file) {
-    return;
-  }
+  if (!file) return;
 
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
-
-  if (!matches) {
-    return;
-  }
+  if (!matches) return;
 
   const imageURL = URL.createObjectURL(file);
-
   previewImage.src = imageURL;
 
   effectsPreviews.forEach((preview) => {
@@ -92,9 +73,28 @@ const loadImage = () => {
 const showModal = () => {
   overlayElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
+
+  if (!bodyElement.hasAttribute('data-modal-open')) {
+    document.addEventListener('keydown', onDocumentKeydown);
+    bodyElement.setAttribute('data-modal-open', 'true');
+  }
+
   initScale();
   initEffects();
+};
+
+const hideModal = () => {
+  formElement.reset();
+  pristine.reset();
+  resetScale();
+  resetEffects();
+  previewImage.src = 'img/upload-default-image.jpg';
+
+  overlayElement.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+
+  document.removeEventListener('keydown', onDocumentKeydown);
+  bodyElement.removeAttribute('data-modal-open');
 };
 
 const initForm = () => {
@@ -110,4 +110,4 @@ const initForm = () => {
   cancelButtonElement.addEventListener('click', hideModal);
 };
 
-export { initForm, hideModal };
+export { initForm, hideModal, formElement };
