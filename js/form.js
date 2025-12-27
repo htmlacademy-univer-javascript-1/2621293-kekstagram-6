@@ -42,6 +42,13 @@ const hasUniqueTags = (value) => {
   return tags.length === new Set(tags).size;
 };
 
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt) && !isTextFieldFocused()) {
+    evt.preventDefault();
+    hideModal();
+  }
+};
+
 const hideModal = () => {
   formElement.reset();
   pristine.reset();
@@ -51,13 +58,6 @@ const hideModal = () => {
   overlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-};
-
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isTextFieldFocused()) {
-    evt.preventDefault();
-    hideModal();
-  }
 };
 
 const showModal = () => {

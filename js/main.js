@@ -20,7 +20,7 @@ const init = async () => {
       if (!pictureElement) return;
 
       const pictureId = Number(pictureElement.dataset.pictureId);
-      const photoData = getFilteredPictures().find(p => p.id === pictureId);
+      const photoData = getFilteredPictures().find((p) => p.id === pictureId);
       if (photoData) {
         openFullscreen(photoData);
       }
@@ -39,7 +39,7 @@ setOnFormSubmit(async (formData) => {
     await sendData(formData);
     hideModal();
     showSuccessMessage();
-  } catch {
+  } catch (err) { 
     showErrorMessage();
   }
 });
