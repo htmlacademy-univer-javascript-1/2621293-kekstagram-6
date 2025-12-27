@@ -1,15 +1,18 @@
-import { formElement, pristine, submitButton } from './form.js';
+import { hideModal } from './form.js';
+import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './messages.js';
+
+const formElement = document.querySelector('.img-upload__form');
 
 const setOnFormSubmit = (callback) => {
   formElement.addEventListener('submit', async (evt) => {
     evt.preventDefault();
-    if (pristine.validate()) {
-      submitButton.disabled = true;
-      try {
-        await callback(new FormData(formElement));
-      } finally {
-        submitButton.disabled = false;
-      }
+    const formData = new FormData(formElement);
+
+    try {
+      await callback(formData);
+    } catch {
+      showErrorMessage();
     }
   });
 };
