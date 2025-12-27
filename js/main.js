@@ -5,20 +5,41 @@ import { initForm, hideModal } from './form.js';
 import { setOnFormSubmit } from './form-submit.js';
 import { initFilters, getFilteredPictures } from './filters.js';
 import { showAlert } from './utils.js';
+import { openFullscreen } from './fullscreen.js';
 
 const init = async () => {
   try {
     const photos = await getData();
+
+    // Инициализация фильтров после загрузки данных
     initFilters(photos, renderThumbnails);
+
+    // Первый рендер — по умолчанию
     renderThumbnails(getFilteredPictures());
+
+    // Обработчик клика на миниатюру
+    const picturesContainer = document.querySelector('.pictures');
+    picturesContainer.addEventListener('click', (evt) => {
+      const pictureElement = evt.target.closest('.picture');
+      if (!pictureElement) return;
+
+      const pictureId = Number(pictureElement.dataset.pictureId);
+      const photoData = getFilteredPictures().find(p => p.id === pictureId);
+      if (photoData) {
+        openFullscreen(photoData);
+      }
+    });
+
   } catch (err) {
     showAlert(err.message);
   }
 };
 
-init();
+// Инициализация формы загрузки
 initForm();
+init();
 
+// Обработчик отправки формы
 setOnFormSubmit(async (formData) => {
   try {
     await sendData(formData);

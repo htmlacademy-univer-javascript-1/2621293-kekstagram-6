@@ -29,29 +29,17 @@ const pristine = new Pristine(formElement, {
   errorTextClass: 'img-upload__error-text',
 });
 
-const normalizeTags = (value) =>
-  value.trim().split(' ').filter(Boolean);
+const normalizeTags = (value) => value.trim().split(' ').filter(Boolean);
 
 const isTextFieldFocused = () =>
   document.activeElement === hashtagFieldElement ||
   document.activeElement === descriptionFieldElement;
 
-const hasValidCount = (value) =>
-  normalizeTags(value).length <= MAX_HASHTAG_COUNT;
-
-const hasValidTags = (value) =>
-  normalizeTags(value).every((tag) => VALID_SYMBOLS.test(tag));
-
+const hasValidCount = (value) => normalizeTags(value).length <= MAX_HASHTAG_COUNT;
+const hasValidTags = (value) => normalizeTags(value).every((tag) => VALID_SYMBOLS.test(tag));
 const hasUniqueTags = (value) => {
   const tags = normalizeTags(value).map((tag) => tag.toLowerCase());
   return tags.length === new Set(tags).size;
-};
-
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isTextFieldFocused()) {
-    evt.preventDefault();
-    hideModal();
-  }
 };
 
 const loadImage = () => {
@@ -70,15 +58,17 @@ const loadImage = () => {
   });
 };
 
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt) && !isTextFieldFocused()) {
+    evt.preventDefault();
+    hideModal();
+  }
+};
+
 const showModal = () => {
   overlayElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
-
-  if (!bodyElement.hasAttribute('data-modal-open')) {
-    document.addEventListener('keydown', onDocumentKeydown);
-    bodyElement.setAttribute('data-modal-open', 'true');
-  }
-
+  document.addEventListener('keydown', onDocumentKeydown);
   initScale();
   initEffects();
 };
@@ -89,12 +79,9 @@ const hideModal = () => {
   resetScale();
   resetEffects();
   previewImage.src = 'img/upload-default-image.jpg';
-
   overlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
-
   document.removeEventListener('keydown', onDocumentKeydown);
-  bodyElement.removeAttribute('data-modal-open');
 };
 
 const initForm = () => {
@@ -110,4 +97,4 @@ const initForm = () => {
   cancelButtonElement.addEventListener('click', hideModal);
 };
 
-export { initForm, hideModal, formElement };
+export { initForm, hideModal };

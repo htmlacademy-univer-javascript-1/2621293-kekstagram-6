@@ -1,7 +1,9 @@
-import { formElement } from './form.js';
+const formElement = document.querySelector('.img-upload__form');
 
 const setOnFormSubmit = (callback) => {
-  if (!formElement) return;
+  if (!callback) {
+    return;
+  }
 
   formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
