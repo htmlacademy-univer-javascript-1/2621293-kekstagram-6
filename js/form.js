@@ -38,11 +38,9 @@ const hasUniqueTags = (value) => {
 };
 const hasValidDescriptionLength = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
 
-/**
- * Закрытие формы
- */
+
 function hideModal() {
-  formElement.reset(); // Очищает поля и сбрасывает выбор файла (важно для теста 1.2)
+  formElement.reset();
   pristine.reset();
   resetScale();
   resetEffects();
@@ -53,19 +51,15 @@ function hideModal() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-/**
- * Обработчик нажатия клавиш
- */
+
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
-    // Если на странице есть сообщение об ошибке, Esc закрывает только сообщение, но не форму (тест 3.5)
     const isErrorMessageExists = Boolean(document.querySelector('.error'));
     
     if (isErrorMessageExists) {
       return;
     }
 
-    // Если фокус в полях ввода, Esc не закрывает форму
     const isFieldFocused = document.activeElement === hashtagFieldElement || 
                            document.activeElement === descriptionFieldElement;
 
@@ -76,9 +70,6 @@ function onDocumentKeydown(evt) {
   }
 }
 
-/**
- * Открытие формы
- */
 const showModal = () => {
   overlayElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
@@ -89,9 +80,6 @@ const showModal = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-/**
- * Загрузка изображения (превью)
- */
 const loadImage = () => {
   const file = fileInputElement.files[0];
   if (!file) {
@@ -110,23 +98,18 @@ const loadImage = () => {
   }
 };
 
-/**a
- * Инициализация всей логики формы
- */
 const initForm = () => {
-  // Добавление валидаторов
+
   pristine.addValidator(hashtagFieldElement, hasValidCount, ERROR_TEXT.INVALID_COUNT);
   pristine.addValidator(hashtagFieldElement, hasValidTags, ERROR_TEXT.INVALID_HASHTAG);
   pristine.addValidator(hashtagFieldElement, hasUniqueTags, ERROR_TEXT.NOT_UNIQUE);
   pristine.addValidator(descriptionFieldElement, hasValidDescriptionLength, ERROR_TEXT.DESCRIPTION_TOO_LONG);
 
-  // Слушатель на выбор файла
   fileInputElement.addEventListener('change', () => {
     loadImage();
     showModal();
   });
 
-  // Слушатель на кнопку закрытия
   cancelButtonElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     hideModal();
