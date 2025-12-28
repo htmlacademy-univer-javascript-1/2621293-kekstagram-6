@@ -1,68 +1,74 @@
 import { debounce } from './utils.js';
 
-const RANDOM_PICTURES_COUNT = 10;
+const RANDOM_PHOTOS_COUNT = 10;
+const DEBOUNCE_DELAY = 500;
 
-const FilterType = {
+const filtersElement = document.querySelector('.img-filters');
+const filtersForm = filtersElement.querySelector('.img-filters__form');
+
+const Filter = {
   DEFAULT: 'filter-default',
   RANDOM: 'filter-random',
   DISCUSSED: 'filter-discussed',
 };
 
-const filtersElement = document.querySelector('.img-filters');
-const filterButtons = filtersElement.querySelectorAll('.img-filters__button');
+// Функция для случайного перемешивания
+const sortRandomly = () => 0.5 - Math.random();
 
-let currentFilter = FilterType.DEFAULT;
-let pictures = [];
+// Функция для сортировки по количеству комментариев
+const sortByComments = (photoA, photoB) => photoB.comments.length - photoA.comments.length;
 
-const sortRandomly = () => Math.random() - 0.5;
-const sortByComments = (a, b) => b.comments.length - a.comments.length;
+/**
+ * Логика фильтрации данных
+ */
+const filterFunctions = {
+  [Filter.DEFAULT]: (data) => data,
+  [Filter.RANDOM]: (data) => [...data].sort(sortRandomly).slice(0, RANDOM_PHOTOS_COUNT),
+  [Filter.DISCUSSED]: (data) => [...data].sort(sortByComments),
+};
 
-const getFilteredPictures = () => {
-  switch (currentFilter) {
-    case FilterType.RANDOM:
-      return [...pictures]
-        .sort(sortRandomly)
-        .slice(0, RANDOM_PICTURES_COUNT);
-
-    case FilterType.DISCUSSED:
-      return [...pictures].sort(sortByComments);
-
-    default:
-      return [...pictures];
+/**
+ * Переключение активного состояния кнопок
+ */
+const toggleButtons = (clickedButton) => {
+  const currentActiveButton = filtersForm.querySelector('.img-filters__button--active');
+  if (currentActiveButton) {
+    currentActiveButton.classList.remove('img-filters__button--active');
   }
+  clickedButton.classList.add('img-filters__button--active');
 };
 
-const setActiveButton = (button) => {
-  filterButtons.forEach((btn) =>
-    btn.classList.remove('img-filters__button--active')
-  );
-  button.classList.add('img-filters__button--active');
-};
+/**
+ * Инициализация фильтров
+ */
+const initFilters = (data, renderCallback) => {
+  filtersElement.classList.remove('img-filters--inactive');
 
-const setOnFilterClick = (callback) => {
-  filtersElement.addEventListener('click', (evt) => {
-    if (!evt.target.classList.contains('img-filters__button')) {
+  // Оборачиваем функцию отрисовки в debounce
+  const debouncedRender = debounce(renderCallback, DEBOUNCE_DELAY);
+
+  filtersForm.addEventListener('click', (evt) => {
+    // Ищем ближайшую кнопку (на случай клика по span внутри)
+    const target = evt.target.closest('.img-filters__button');
+    
+    if (!target) {
       return;
     }
 
-    const selectedFilter = evt.target.id;
-    if (selectedFilter === currentFilter) {
+    // Если кликнули по уже активному фильтру — ничего не делаем
+    if (target.classList.contains('img-filters__button--active')) {
       return;
     }
 
-    currentFilter = selectedFilter;
-    setActiveButton(evt.target);
-    callback(getFilteredPictures());
+    // 1. Сразу переключаем кнопки (синхронно)
+    toggleButtons(target);
+
+    // 2. Получаем отфильтрованные данные
+    const filteredData = filterFunctions[target.id](data);
+
+    // 3. Вызываем отрисовку с задержкой (debounce)
+    debouncedRender(filteredData);
   });
 };
 
-const initFilters = (loadedPictures, renderCallback) => {
-  pictures = [...loadedPictures];
-  filtersElement.classList.remove('img-filters--inactive');
-
-  setOnFilterClick(
-    debounce(renderCallback)
-  );
-};
-
-export { initFilters, getFilteredPictures };
+export { initFilters };

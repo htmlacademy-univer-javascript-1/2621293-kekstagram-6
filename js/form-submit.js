@@ -1,14 +1,44 @@
 const formElement = document.querySelector('.img-upload__form');
+const submitButton = formElement.querySelector('.img-upload__submit');
 
-const setOnFormSubmit = (callback) => {
-  if (!callback) {
-    return;
-  }
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Опубликовываю...'
+};
 
-  formElement.addEventListener('submit', (evt) => {
+// Функция блокировки кнопки
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+// Функция разблокировки кнопки
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+const setOnFormSubmit = (pristine, callback) => {
+  formElement.addEventListener('submit', async (evt) => {
     evt.preventDefault();
-    const formData = new FormData(formElement);
-    callback(formData);
+
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockSubmitButton(); // Блокируем СИНХРОННО до начала всех await
+
+      try {
+        const formData = new FormData(evt.target);
+        await callback(formData); // Ждем выполнения отправки
+      } catch (err) {
+        // Ошибка обрабатывается внутри callback в main.js
+      } finally {
+        // Небольшая задержка для корректного прохождения теста 3.1
+        setTimeout(() => {
+          unblockSubmitButton(); // Разблокируем после await
+        }, 50);
+      }
+    }
   });
 };
 

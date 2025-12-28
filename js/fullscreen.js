@@ -1,100 +1,110 @@
 import { isEscapeKey } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
+const bodyElement = document.body;
 const closeButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
-const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
-const socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsListElement = bigPictureElement.querySelector('.social__comments');
 const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
 
-const COMMENTS_STEP = 5;
-let currentComments = [];
+const COMMENTS_PER_PORTION = 5;
 let commentsShown = 0;
+let comments = [];
 
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeFullscreen();
-  }
+/**
+ * Создание DOM-элемента одного комментария
+ */
+const createComment = ({ avatar, name, message }) => {
+  const comment = document.createElement('li');
+  comment.innerHTML = '<img class="social__picture" src="" alt="" width="35" height="35"><p class="social__text"></p>';
+  comment.classList.add('social__comment');
+
+  comment.querySelector('.social__picture').src = avatar;
+  comment.querySelector('.social__picture').alt = name;
+  comment.querySelector('.social__text').textContent = message;
+
+  return comment;
 };
 
-const createComment = (comment) => {
-  const commentElement = document.createElement('li');
-  commentElement.classList.add('social__comment');
-
-  const commentImage = document.createElement('img');
-  commentImage.classList.add('social__picture');
-  commentImage.src = comment.avatar;
-  commentImage.alt = comment.name;
-  commentImage.width = 35;
-  commentImage.height = 35;
-
-  const commentText = document.createElement('p');
-  commentText.classList.add('social__text');
-  commentText.textContent = comment.message;
-
-  commentElement.appendChild(commentImage);
-  commentElement.appendChild(commentText);
-
-  return commentElement;
-};
-
+/**
+ * Отрисовка порции комментариев и обновление счетчика
+ */
 const renderComments = () => {
-  socialCommentsElement.innerHTML = '';
-  const commentsToRender = currentComments.slice(0, commentsShown);
-  const commentsFragment = document.createDocumentFragment();
+  commentsShown += COMMENTS_PER_PORTION;
 
-  commentsToRender.forEach((comment) => {
-    commentsFragment.appendChild(createComment(comment));
-  });
-
-  socialCommentsElement.appendChild(commentsFragment);
-
-  socialCommentCountElement.innerHTML = `${commentsShown} из <span class="comments-count">${currentComments.length}</span> комментариев`;
-
-  if (commentsShown >= currentComments.length) {
+  if (commentsShown >= comments.length) {
     commentsLoaderElement.classList.add('hidden');
+    commentsShown = comments.length;
   } else {
     commentsLoaderElement.classList.remove('hidden');
   }
+
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < commentsShown; i++) {
+    const comment = createComment(comments[i]);
+    fragment.append(comment);
+  }
+
+  commentsListElement.innerHTML = '';
+  commentsListElement.append(fragment);
+  
+  // ВАЖНО: Перезаписываем содержимое блока счетчика, создавая нужные спаны для тестов Cypress
+  commentCountElement.innerHTML = `
+    <span class="social__comment-shown-count">${commentsShown}</span> из 
+    <span class="social__comment-total-count">${comments.length}</span> комментариев
+  `;
 };
 
-const onCommentsLoaderClick = () => {
-  commentsShown = Math.min(commentsShown + COMMENTS_STEP, currentComments.length);
-  renderComments();
-};
+/**
+ * Обработчик клика по "Загрузить еще"
+ */
+const onCommentsLoaderClick = () => renderComments();
 
-function openFullscreen(photo) {
-  commentsShown = Math.min(COMMENTS_STEP, photo.comments.length);
-  currentComments = photo.comments;
-
-  bigPictureElement.querySelector('.big-picture__img img').src = photo.url;
-  bigPictureElement.querySelector('.big-picture__img img').alt = photo.description;
-  bigPictureElement.querySelector('.likes-count').textContent = photo.likes;
-  bigPictureElement.querySelector('.comments-count').textContent = photo.comments.length;
-  bigPictureElement.querySelector('.social__caption').textContent = photo.description;
-
-  renderComments();
-
-  bigPictureElement.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-
-  document.addEventListener('keydown', onDocumentKeydown);
-  commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
-}
-
-function closeFullscreen() {
-  commentsShown = 0;
-  currentComments = [];
-
+/**
+ * Закрытие полноэкранного режима
+ */
+const closeBigPicture = () => {
   bigPictureElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-
+  bodyElement.classList.remove('modal-open');
+  
   document.removeEventListener('keydown', onDocumentKeydown);
   commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
+};
+
+/**
+ * Обработчик нажатия Esc
+ */
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeBigPicture();
+  }
 }
 
+/**
+ * Открытие полноэкранного режима
+ */
+const openFullscreen = (data) => {
+  bigPictureElement.classList.remove('hidden');
+  bodyElement.classList.add('modal-open');
+
+  bigPictureElement.querySelector('.big-picture__img img').src = data.url;
+  bigPictureElement.querySelector('.likes-count').textContent = data.likes;
+  bigPictureElement.querySelector('.social__caption').textContent = data.description;
+
+  comments = data.comments;
+  commentsShown = 0;
+  
+  // Первая отрисовка
+  renderComments();
+
+  commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+// Обработчик кнопки закрытия (крестик)
 closeButtonElement.addEventListener('click', () => {
-  closeFullscreen();
+  closeBigPicture();
 });
 
 export { openFullscreen };

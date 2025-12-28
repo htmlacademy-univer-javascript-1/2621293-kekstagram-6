@@ -29,6 +29,15 @@ function onBodyClick(evt) {
 
 const showMessage = (template, buttonSelector) => {
   const messageElement = template.cloneNode(true);
+  messageElement.classList.remove('hidden');
+
+  // Ставим поверх всех элементов
+  messageElement.style.position = 'fixed';
+  messageElement.style.top = '0';
+  messageElement.style.left = '0';
+  messageElement.style.right = '0';
+  messageElement.style.zIndex = '10000';
+
   bodyElement.append(messageElement);
 
   document.addEventListener('keydown', onDocumentKeydown);
@@ -39,12 +48,7 @@ const showMessage = (template, buttonSelector) => {
     .addEventListener('click', removeMessage);
 };
 
-const showSuccessMessage = () => {
-  showMessage(successTemplate, '.success__button');
-};
-
-const showErrorMessage = () => {
-  showMessage(errorTemplate, '.error__button');
-};
+const showSuccessMessage = () => showMessage(successTemplate, '.success__button');
+const showErrorMessage = () => showMessage(errorTemplate, '.error__button');
 
 export { showSuccessMessage, showErrorMessage };

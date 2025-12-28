@@ -63,7 +63,7 @@ const createSlider = () => {
   });
 
   sliderElement.noUiSlider.on('update', () => {
-    const sliderValue = sliderElement.noUiSlider.get();
+    const sliderValue = Number(sliderElement.noUiSlider.get());
     effectLevelInput.value = sliderValue;
 
     if (currentEffect !== 'none') {

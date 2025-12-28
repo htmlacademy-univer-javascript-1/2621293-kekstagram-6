@@ -4,7 +4,8 @@ const getRandomInteger = (a, b) => {
   return Math.floor(Math.random() * (upper - lower + 1) + lower);
 };
 
-const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+const getRandomArrayElement = (elements) =>
+  elements[getRandomInteger(0, elements.length - 1)];
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
@@ -14,15 +15,23 @@ const createIdGenerator = () => {
 };
 
 const debounce = (callback, delay = 500) => {
-  let timeoutId;
+  let timeoutId = null;
+
   return (...args) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback(...args), delay);
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      callback(...args);
+      timeoutId = null;
+    }, delay);
   };
 };
 
 const showAlert = (message) => {
-  const ALERT_STYLE = `
+  const alertContainer = document.createElement('div');
+  alertContainer.style.cssText = `
     z-index: 100;
     position: fixed;
     left: 0;
@@ -34,8 +43,6 @@ const showAlert = (message) => {
     background-color: red;
     color: white;
   `;
-  const alertContainer = document.createElement('div');
-  alertContainer.style.cssText = ALERT_STYLE;
   alertContainer.textContent = message;
   document.body.append(alertContainer);
 
