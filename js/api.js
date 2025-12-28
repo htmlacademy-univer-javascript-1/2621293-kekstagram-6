@@ -1,4 +1,4 @@
-const BASE_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/'; // обязательно со слэшем
+const BASE_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/';
 
 
 const getData = async () => {
