@@ -10,11 +10,11 @@ const showDataError = () => {
   const dataErrorTemplate = document.querySelector('#data-error');
   let errorElement;
 
-  // Безопасная проверка: если шаблон существует, клонируем его
+  
   if (dataErrorTemplate) {
     errorElement = dataErrorTemplate.content.querySelector('.data-error').cloneNode(true);
   } else {
-    // Иначе создаем элемент вручную (фоллбэк)
+
     errorElement = document.createElement('div');
     errorElement.className = 'data-error';
     errorElement.textContent = 'Ошибка загрузки данных';
@@ -35,7 +35,7 @@ const showDataError = () => {
 
   document.body.append(errorElement);
 
-  // ВАЖНО: Уменьшили время с 5000 до 3000, чтобы тест Cypress (который ждет 4000) успел увидеть исчезновение
+
   setTimeout(() => {
     errorElement.remove();
   }, 3000);

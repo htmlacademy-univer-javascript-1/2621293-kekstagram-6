@@ -1,43 +1,38 @@
+const SUBMIT_BUTTON_DELAY = 50;
+
 const formElement = document.querySelector('.img-upload__form');
 const submitButton = formElement.querySelector('.img-upload__submit');
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
-  SENDING: 'Опубликовываю...'
+  SENDING: 'Опубликовываю...',
 };
 
-// Функция блокировки кнопки
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = SubmitButtonText.SENDING;
 };
 
-// Функция разблокировки кнопки
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-const setOnFormSubmit = (pristine, callback) => {
+const setOnFormSubmit = (pristine, onSubmit) => {
   formElement.addEventListener('submit', async (evt) => {
     evt.preventDefault();
 
-    const isValid = pristine.validate();
+    if (!pristine.validate()) {
+      return;
+    }
 
-    if (isValid) {
-      blockSubmitButton(); // Блокируем СИНХРОННО до начала всех await
+    blockSubmitButton();
 
-      try {
-        const formData = new FormData(evt.target);
-        await callback(formData); // Ждем выполнения отправки
-      } catch (err) {
-        // Ошибка обрабатывается внутри callback в main.js
-      } finally {
-        // Небольшая задержка для корректного прохождения теста 3.1
-        setTimeout(() => {
-          unblockSubmitButton(); // Разблокируем после await
-        }, 50);
-      }
+    try {
+      const formData = new FormData(evt.target);
+      await onSubmit(formData);
+    } finally {
+      setTimeout(unblockSubmitButton, SUBMIT_BUTTON_DELAY);
     }
   });
 };
